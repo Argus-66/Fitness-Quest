@@ -89,7 +89,4 @@ export default function UserHeader({
       </div>
     </div>
   );
-}
-
-// Re-export the actual component to handle case sensitivity issues
-export { default } from './UserHeader.tsx';
+} 
