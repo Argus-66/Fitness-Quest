@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
   details: {
     height: { type: Number, default: 0 },
     weight: { type: Number, default: 0 },
-    age: { type: Number, default: 0 }
+    age: { type: Number, default: 0 },
+    gender: { type: String, default: '' },
+    fitnessLevel: { type: String, default: 'beginner', enum: ['beginner', 'intermediate', 'advanced'] },
+    fitnessGoals: { type: [String], default: [] }
   },
   progression: {
     level: { type: Number, default: 1 },

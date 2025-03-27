@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export async function POST(req: Request) {
+export async function POST(req) {
   try {
     await connectDB();
 
@@ -32,8 +32,15 @@ export async function POST(req: Request) {
     user.lastLogin = new Date();
     await user.save();
 
-    // Remove password from response
-    const { password: _, ...userWithoutPassword } = user.toObject();
+    // Create session or token if needed
+    // For this example, we'll just return the user data without password
+    const userWithoutPassword = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      joinedDate: user.joinedDate,
+      theme: user.theme
+    };
 
     return NextResponse.json({
       message: 'Login successful',
@@ -42,8 +49,8 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: (error as Error).message || 'Unknown error occurred' },
+      { error: 'Internal server error', details: error.message || 'Unknown error occurred' },
       { status: 500 }
     );
   }
-}
+} 

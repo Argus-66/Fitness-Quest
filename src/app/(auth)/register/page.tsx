@@ -5,10 +5,26 @@ import Link from 'next/link';
 import { FaUser, FaEnvelope, FaLock, FaRulerVertical, FaWeight } from 'react-icons/fa';
 import { BsGenderAmbiguous } from 'react-icons/bs';
 import { IoMdCalendar } from 'react-icons/io';
+import { MdFitnessCenter, MdSportsGymnastics } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 
+interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  age: string;
+  gender: string;
+  height: string;
+  weight: string;
+  fitnessLevel: string;
+  fitnessGoals: string[];
+  bio: string;
+}
+
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
     password: '',
@@ -16,7 +32,10 @@ export default function RegisterPage() {
     age: '',
     gender: '',
     height: '',
-    weight: ''
+    weight: '',
+    fitnessLevel: 'beginner',
+    fitnessGoals: [],
+    bio: ''
   });
 
   const router = useRouter();
@@ -26,7 +45,7 @@ export default function RegisterPage() {
     
     try {
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords don't match!");
+        setError("Passwords don't match!");
         return;
       }
 
@@ -51,93 +70,279 @@ export default function RegisterPage() {
         throw new Error(data.error || 'Something went wrong');
       }
 
-      alert('Registration successful!');
       router.push('/login');
     } catch (error) {
       console.error('Registration error:', error);
-      alert((error as Error).message || 'Something went wrong');
+      setError((error as Error).message || 'Something went wrong');
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setFormData(prev => {
+      if (checked) {
+        return {
+          ...prev,
+          fitnessGoals: [...prev.fitnessGoals, value]
+        };
+      } else {
+        return {
+          ...prev,
+          fitnessGoals: prev.fitnessGoals.filter(goal => goal !== value)
+        };
+      }
+    });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0d0a12]">
-      <div className="max-w-md w-full space-y-8 p-8 bg-[#0d0a12]/40 backdrop-blur-sm rounded-xl border border-[#9333ea]/20">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Create your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
+    <div className="min-h-screen bg-theme-gradient py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md mx-auto bg-theme-dark/50 backdrop-blur-lg rounded-xl shadow-theme overflow-hidden">
+        <div className="px-6 py-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-theme-light to-theme-accent text-transparent bg-clip-text">
+              Join the Quest
+            </h2>
+            <p className="mt-2 text-theme-light/80">Begin your fitness journey today</p>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Info */}
+            <div className="relative">
+              <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
               <input
-                id="username"
-                name="username"
                 type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#9333ea]/20 placeholder-white/50 text-white bg-[#0d0a12]/40 rounded-t-md focus:outline-none focus:ring-[#9333ea] focus:border-[#9333ea] focus:z-10 sm:text-sm"
+                name="username"
                 placeholder="Username"
                 value={formData.username}
                 onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                  text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30
+                  transition-colors"
+                required
               />
             </div>
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
+
+            <div className="relative">
+              <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
               <input
-                id="email"
-                name="email"
                 type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#9333ea]/20 placeholder-white/50 text-white bg-[#0d0a12]/40 focus:outline-none focus:ring-[#9333ea] focus:border-[#9333ea] focus:z-10 sm:text-sm"
+                name="email"
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                  text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                required
               />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
+
+            <div className="relative">
+              <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
               <input
-                id="password"
-                name="password"
                 type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#9333ea]/20 placeholder-white/50 text-white bg-[#0d0a12]/40 rounded-b-md focus:outline-none focus:ring-[#9333ea] focus:border-[#9333ea] focus:z-10 sm:text-sm"
-                placeholder="Password"
+                name="password"
+                placeholder="Password (min. 6 characters)"
                 value={formData.password}
                 onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                  text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                required
               />
             </div>
-          </div>
 
-          <div>
+            <div className="relative">
+              <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                  text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                required
+              />
+            </div>
+
+            {/* Physical Info */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <IoMdCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
+                <input
+                  type="number"
+                  name="age"
+                  placeholder="Age"
+                  value={formData.age}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                    text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                  required
+                />
+              </div>
+
+              <div className="relative">
+                <BsGenderAmbiguous className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                    text-white focus:outline-none focus:border-theme-light/30 appearance-none"
+                  required
+                >
+                  <option value="">Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="relative">
+                <FaRulerVertical className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
+                <input
+                  type="number"
+                  name="height"
+                  placeholder="Height (cm)"
+                  value={formData.height}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                    text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                  required
+                />
+              </div>
+
+              <div className="relative">
+                <FaWeight className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
+                <input
+                  type="number"
+                  name="weight"
+                  placeholder="Weight (kg)"
+                  value={formData.weight}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                    text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Fitness Level */}
+            <div className="relative">
+              <MdFitnessCenter className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-light/50" />
+              <select
+                name="fitnessLevel"
+                value={formData.fitnessLevel}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                  text-white focus:outline-none focus:border-theme-light/30 appearance-none"
+              >
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+
+            {/* Fitness Goals */}
+            <div className="bg-theme-primary/20 border border-theme-light/10 rounded-lg p-4">
+              <p className="text-theme-light mb-2 flex items-center">
+                <MdSportsGymnastics className="mr-2" />
+                Fitness Goals (Select all that apply)
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="loseWeight"
+                    name="fitnessGoals"
+                    value="loseWeight"
+                    checked={formData.fitnessGoals.includes('loseWeight')}
+                    onChange={handleCheckboxChange}
+                    className="rounded border-theme-light/10 bg-theme-primary/30 text-theme-accent focus:ring-theme-accent"
+                  />
+                  <label htmlFor="loseWeight" className="text-theme-light">Lose Weight</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="buildMuscle"
+                    name="fitnessGoals"
+                    value="buildMuscle"
+                    checked={formData.fitnessGoals.includes('buildMuscle')}
+                    onChange={handleCheckboxChange}
+                    className="rounded border-theme-light/10 bg-theme-primary/30 text-theme-accent focus:ring-theme-accent"
+                  />
+                  <label htmlFor="buildMuscle" className="text-theme-light">Build Muscle</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="improveEndurance"
+                    name="fitnessGoals"
+                    value="improveEndurance"
+                    checked={formData.fitnessGoals.includes('improveEndurance')}
+                    onChange={handleCheckboxChange}
+                    className="rounded border-theme-light/10 bg-theme-primary/30 text-theme-accent focus:ring-theme-accent"
+                  />
+                  <label htmlFor="improveEndurance" className="text-theme-light">Improve Endurance</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="increaseStrength"
+                    name="fitnessGoals"
+                    value="increaseStrength"
+                    checked={formData.fitnessGoals.includes('increaseStrength')}
+                    onChange={handleCheckboxChange}
+                    className="rounded border-theme-light/10 bg-theme-primary/30 text-theme-accent focus:ring-theme-accent"
+                  />
+                  <label htmlFor="increaseStrength" className="text-theme-light">Increase Strength</label>
+                </div>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div className="relative">
+              <textarea
+                name="bio"
+                placeholder="Tell us about your fitness journey (optional)"
+                value={formData.bio}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-theme-primary/20 border border-theme-light/10 rounded-lg 
+                  text-white placeholder-theme-light/50 focus:outline-none focus:border-theme-light/30"
+                rows={3}
+              />
+            </div>
+
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#9333ea] hover:bg-[#9333ea]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#9333ea]"
+              className="w-full py-4 bg-theme-accent hover:bg-theme-primary text-white rounded-lg
+                transform transition-all duration-300 hover:scale-[1.02]
+                shadow-theme"
             >
-              Sign up
+              Create Account
             </button>
-          </div>
+          </form>
 
-          <div className="text-center">
-            <Link href="/login" className="text-[#9333ea] hover:text-[#9333ea]/80">
-              Already have an account? Sign in
+          <p className="mt-6 text-center text-theme-light/80">
+            Already have an account?{' '}
+            <Link href="/login" className="text-theme-accent hover:text-theme-light transition-colors">
+              Login here
             </Link>
-          </div>
-        </form>
+          </p>
+        </div>
       </div>
     </div>
   );
