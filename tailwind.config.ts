@@ -9,6 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        theme: {
+          dark: 'var(--dark)',
+          accent: 'var(--accent)',
+          primary: 'var(--primary)',
+          secondary: 'var(--secondary)',
+          light: 'var(--light)',
+          highlight: 'var(--highlight)',
+        },
         'solo-dark': '#190019',
         'solo-purple': '#2B124C',
         'solo-accent': '#522B5B',
@@ -18,8 +26,17 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "theme-gradient": "linear-gradient(to bottom right, var(--dark), var(--primary) 20%, var(--dark))",
+      },
+      gridTemplateColumns: {
+        // For the activity heatmap (26 weeks in 6 months)
+        '26': 'repeat(26, minmax(0, 1fr))',
+      },
+      boxShadow: {
+        'glow-sm': '0 0 4px rgba(var(--theme-accent-rgb), 0.5)',
+        'glow': '0 0 8px rgba(var(--theme-accent-rgb), 0.6)',
+        'glow-lg': '0 0 12px rgba(var(--theme-accent-rgb), 0.7)',
       },
     },
   },

@@ -228,3 +228,157 @@ GitHub
 LinkedIn
 Instagram
 Twitter
+
+
+
+gemini api integration
+IN THE LAST
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ANTI CHEAT
+🚨 Why people cheat:
+Flex on leaderboards.
+Brag to friends.
+Unlock stuff faster (levels, coins, achievements).
+
+
+🧠 Anti-Cheat Strategies:
+1️⃣ Limit Max XP per Day
+No matter what crazy goals they set, cap the XP. Example:
+
+Max XP/day = 500
+So even if they log 10 workouts, the max they get is 500 XP that day
+
+
+2️⃣ Goal Size Limits
+Put logic like:
+
+Max 100 reps per exercise daily.
+Max 3 hours logged per day.
+Reject unrealistically high inputs (e.g., “2000 pushups”).
+
+
+3️⃣ Cooldowns
+Prevent spamming:
+Can only complete the same workout once every X hours.
+
+
+5️⃣ Achievements Not Just XP
+Make leaderboards show more than XP.
+
+Longest streaks.
+Hardest workouts.
+Real "verified" achievements.
+
+
+6️⃣ Skill XP Separation
+Make it so high goals aren’t always better. For example:
+
+You gain better XP if you vary workouts.
+Repeating "100 squats" every day gives diminishing returns.
+
+
+
+
+THINGS TO FIX:
+when others open other people profile they should have the edit profile option and logout option
+
+
+
+
+
+
+
+
+
+OTHER THEMES:
+
+
+Dragon Ball
+#0A0A23
+#FF8C00
+#E63946
+#FFC300
+#F1FAEE
+#457B9D
+
+One Punch
+#1A1A1A
+#F9D342
+#FF4500
+#EFEFEF
+#FFFFFF
+#DC143C
+
+Baki
+#101010
+#D32F2F
+#FF7043
+#FFCCBC
+#E0E0E0
+#FFFFFF
+
+Attack on Titan
+#2C3E50
+#556B2F
+#C0392B
+#D35400
+#ECF0F1
+#7F8C8D
+
+One Piece
+#001F3F
+#27AE60
+#E67E22
+#F39C12
+#FDFEFE
+#FFFFFF
+
+Jujutsu Kaisen
+#1C1C1C
+#0077B6
+#9B59B6
+#D2B4DE
+#ECF0F1
+#FFFFFF
+
+Black Clover
+#1A1A1A
+#000000
+#F1C40F
+#8E44AD
+#D4AC0D
+#EAECEE
+
+Naruto
+#000e44
+#d3512a
+#094283
+#921212
+#FFDC00
+#FDFEFE
+
+#094283
+#690000
+#2980B9
+#000000
+#F0F0F0
+#E74C3C
+
+
+
+
+

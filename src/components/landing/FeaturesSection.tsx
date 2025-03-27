@@ -14,7 +14,8 @@ const features = [
   {
     icon: <GiCardRandom className="w-12 h-12" />,
     title: "Card Collection",
-    description: "Unlock and collect unique anime-themed cards as you progress."
+    description: "Unlock and collect unique anime-themed cards as you progress.",
+    upcoming: true
   },
   {
     icon: <GiPodiumWinner className="w-12 h-12" />,
@@ -46,7 +47,14 @@ export default function FeaturesSection() {
               <div className="text-solo-light mb-6 transform group-hover:scale-110 transition-transform duration-300">
                 {feature.icon}
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-2xl font-bold text-white">{feature.title}</h3>
+                {feature.upcoming && (
+                  <span className="text-xs font-medium bg-solo-accent/80 text-white px-2 py-1 rounded-full">
+                    UPCOMING
+                  </span>
+                )}
+              </div>
               <p className="text-solo-light/80 group-hover:text-solo-light transition-colors duration-300">
                 {feature.description}
               </p>

@@ -8,6 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        theme: {
+          dark: 'var(--dark)',
+          accent: 'var(--accent)',
+          primary: 'var(--primary)',
+          secondary: 'var(--secondary)',
+          light: 'var(--light)',
+          highlight: 'var(--highlight)',
+        },
         solo: {
           dark: '#190019',
           purple: '#2B124C',
