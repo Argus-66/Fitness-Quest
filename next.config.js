@@ -19,7 +19,8 @@ const nextConfig = {
   },
   // Enable webpack analyzer only in production for debugging
   webpack: (config, { isServer }) => {
-    // Any webpack customization here
+    // Explicitly include JSX/TSX files
+    config.resolve.extensions = ['.js', '.jsx', '.ts', '.tsx', ...config.resolve.extensions];
     return config;
   },
 }
