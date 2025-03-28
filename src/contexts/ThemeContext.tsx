@@ -1,7 +1,8 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { themes } from '@/config/themes';
+// Remove or rename the imported themes to avoid conflict with the local definition
+// import { themes } from '@/config/themes';
 import { getUser } from '@/lib/auth.js';
 import { usePathname } from 'next/navigation';
 
