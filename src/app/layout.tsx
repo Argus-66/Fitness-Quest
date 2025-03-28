@@ -1,10 +1,16 @@
 'use client';
 
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'Fitness Quest',
+  description: 'Track your fitness journey with an anime-inspired fitness app',
+};
 
 export default function RootLayout({
   children,

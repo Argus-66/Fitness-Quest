@@ -3,19 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* Theme Colors */
-  --dark: #0d0a12;
-  --accent: #ff5e5b;
-  --primary: #7b2cbf;
-  --secondary: #3a0ca3;
-  --light: #f8f9fa;
-  --highlight: #4cc9f0;
-
-  /* RGB values for shadows and opacity */
-  --theme-accent-rgb: 255, 94, 91;
-  --theme-primary-rgb: 123, 44, 191;
-  --theme-secondary-rgb: 58, 12, 163;
-  --theme-highlight-rgb: 76, 201, 240;
+  /* Default theme colors (Solo Leveling) - will be overridden by ThemeContext */
+  --theme-dark-rgb: 18, 0, 17;
+  --theme-accent-rgb: 133, 79, 108;
+  --theme-primary-rgb: 82, 43, 91;
+  --theme-secondary-rgb: 56, 32, 57;
+  --theme-light-rgb: 246, 246, 246;
+  --theme-highlight-rgb: 230, 188, 205;
 }
 
 @layer base {
@@ -25,66 +19,59 @@
 }
 
 @layer components {
-  /* Theme Shadows */
   .shadow-theme {
-    box-shadow: 0 0 20px rgba(var(--theme-accent-rgb), 0.1);
+    box-shadow: 0 0 20px rgba(var(--theme-primary-rgb), 0.3);
   }
   
-  .shadow-theme-sm {
-    box-shadow: 0 0 10px rgba(var(--theme-accent-rgb), 0.1);
+  .shadow-glow-sm {
+    box-shadow: 0 0 10px rgba(var(--theme-primary-rgb), 0.4);
   }
   
-  .shadow-theme-lg {
-    box-shadow: 0 0 30px rgba(var(--theme-accent-rgb), 0.2);
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(var(--theme-primary-rgb), 0.5);
   }
-
-  /* Theme Gradients */
+  
+  .shadow-glow-lg {
+    box-shadow: 0 0 30px rgba(var(--theme-primary-rgb), 0.6);
+  }
+  
+  .shadow-glow-xl {
+    box-shadow: 0 0 40px rgba(var(--theme-primary-rgb), 0.7);
+  }
+  
   .bg-theme-gradient {
     background: linear-gradient(to bottom right, 
-      var(--dark),
-      color-mix(in srgb, var(--primary) 20%, var(--dark)),
-      var(--dark)
+      rgb(var(--theme-dark-rgb)), 
+      rgba(var(--theme-primary-rgb), 0.3), 
+      rgb(var(--theme-dark-rgb))
     );
   }
-
+  
   .text-theme-gradient {
-    background: linear-gradient(to right, var(--light), var(--accent));
+    background: linear-gradient(to right, 
+      rgb(var(--theme-accent-rgb)), 
+      rgb(var(--theme-primary-rgb))
+    );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
-
-  /* Scrollbar */
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
+  
+  /* Generate pulse-glow animation for shadows */
+  @keyframes pulse-glow {
+    0% {
+      filter: drop-shadow(0 0 5px rgba(var(--theme-primary-rgb), 0.3));
+    }
+    50% {
+      filter: drop-shadow(0 0 15px rgba(var(--theme-accent-rgb), 0.5));
+    }
+    100% {
+      filter: drop-shadow(0 0 5px rgba(var(--theme-primary-rgb), 0.3));
+    }
   }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: var(--accent);
-    border-radius: 3px;
-  }
-
-  /* Utility Classes */
-  .text-wrap-balance {
-    text-wrap: balance;
-  }
-
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite;
   }
 }
 
@@ -102,50 +89,50 @@
   }
 
   /* Theme-based text colors */
-  .text-theme-light { color: var(--light); }
-  .text-theme-dark { color: var(--dark); }
-  .text-theme-accent { color: var(--accent); }
-  .text-theme-primary { color: var(--primary); }
-  .text-theme-secondary { color: var(--secondary); }
-  .text-theme-highlight { color: var(--highlight); }
+  .text-theme-light { color: var(--theme-light-rgb); }
+  .text-theme-dark { color: var(--theme-dark-rgb); }
+  .text-theme-accent { color: var(--theme-accent-rgb); }
+  .text-theme-primary { color: var(--theme-primary-rgb); }
+  .text-theme-secondary { color: var(--theme-secondary-rgb); }
+  .text-theme-highlight { color: var(--theme-highlight-rgb); }
 
   /* Theme-based background colors */
-  .bg-theme-light { background-color: var(--light); }
-  .bg-theme-dark { background-color: var(--dark); }
-  .bg-theme-accent { background-color: var(--accent); }
-  .bg-theme-primary { background-color: var(--primary); }
-  .bg-theme-secondary { background-color: var(--secondary); }
-  .bg-theme-highlight { background-color: var(--highlight); }
+  .bg-theme-light { background-color: var(--theme-light-rgb); }
+  .bg-theme-dark { background-color: var(--theme-dark-rgb); }
+  .bg-theme-accent { background-color: var(--theme-accent-rgb); }
+  .bg-theme-primary { background-color: var(--theme-primary-rgb); }
+  .bg-theme-secondary { background-color: var(--theme-secondary-rgb); }
+  .bg-theme-highlight { background-color: var(--theme-highlight-rgb); }
 
   /* Theme-based border colors */
-  .border-theme-light { border-color: var(--light); }
-  .border-theme-dark { border-color: var(--dark); }
-  .border-theme-accent { border-color: var(--accent); }
-  .border-theme-primary { border-color: var(--primary); }
-  .border-theme-secondary { border-color: var(--secondary); }
-  .border-theme-highlight { border-color: var(--highlight); }
+  .border-theme-light { border-color: var(--theme-light-rgb); }
+  .border-theme-dark { border-color: var(--theme-dark-rgb); }
+  .border-theme-accent { border-color: var(--theme-accent-rgb); }
+  .border-theme-primary { border-color: var(--theme-primary-rgb); }
+  .border-theme-secondary { border-color: var(--theme-secondary-rgb); }
+  .border-theme-highlight { border-color: var(--theme-highlight-rgb); }
 
   /* Theme-based opacity variants */
-  .bg-theme-dark\/20 { background-color: color-mix(in srgb, var(--dark) 20%, transparent); }
-  .bg-theme-dark\/30 { background-color: color-mix(in srgb, var(--dark) 30%, transparent); }
-  .bg-theme-dark\/40 { background-color: color-mix(in srgb, var(--dark) 40%, transparent); }
+  .bg-theme-dark\/20 { background-color: color-mix(in srgb, var(--theme-dark-rgb) 20%, transparent); }
+  .bg-theme-dark\/30 { background-color: color-mix(in srgb, var(--theme-dark-rgb) 30%, transparent); }
+  .bg-theme-dark\/40 { background-color: color-mix(in srgb, var(--theme-dark-rgb) 40%, transparent); }
   
-  .bg-theme-accent\/20 { background-color: color-mix(in srgb, var(--accent) 20%, transparent); }
-  .bg-theme-accent\/30 { background-color: color-mix(in srgb, var(--accent) 30%, transparent); }
-  .bg-theme-accent\/80 { background-color: color-mix(in srgb, var(--accent) 80%, transparent); }
+  .bg-theme-accent\/20 { background-color: color-mix(in srgb, var(--theme-accent-rgb) 20%, transparent); }
+  .bg-theme-accent\/30 { background-color: color-mix(in srgb, var(--theme-accent-rgb) 30%, transparent); }
+  .bg-theme-accent\/80 { background-color: color-mix(in srgb, var(--theme-accent-rgb) 80%, transparent); }
 
-  .bg-theme-primary\/10 { background-color: color-mix(in srgb, var(--primary) 10%, transparent); }
-  .bg-theme-primary\/20 { background-color: color-mix(in srgb, var(--primary) 20%, transparent); }
-  .bg-theme-primary\/30 { background-color: color-mix(in srgb, var(--primary) 30%, transparent); }
-  .bg-theme-primary\/80 { background-color: color-mix(in srgb, var(--primary) 80%, transparent); }
+  .bg-theme-primary\/10 { background-color: color-mix(in srgb, var(--theme-primary-rgb) 10%, transparent); }
+  .bg-theme-primary\/20 { background-color: color-mix(in srgb, var(--theme-primary-rgb) 20%, transparent); }
+  .bg-theme-primary\/30 { background-color: color-mix(in srgb, var(--theme-primary-rgb) 30%, transparent); }
+  .bg-theme-primary\/80 { background-color: color-mix(in srgb, var(--theme-primary-rgb) 80%, transparent); }
 
-  .border-theme-accent\/10 { border-color: color-mix(in srgb, var(--accent) 10%, transparent); }
-  .border-theme-accent\/20 { border-color: color-mix(in srgb, var(--accent) 20%, transparent); }
-  .border-theme-primary\/20 { border-color: color-mix(in srgb, var(--primary) 20%, transparent); }
+  .border-theme-accent\/10 { border-color: color-mix(in srgb, var(--theme-accent-rgb) 10%, transparent); }
+  .border-theme-accent\/20 { border-color: color-mix(in srgb, var(--theme-accent-rgb) 20%, transparent); }
+  .border-theme-primary\/20 { border-color: color-mix(in srgb, var(--theme-primary-rgb) 20%, transparent); }
 
-  .text-theme-light\/60 { color: color-mix(in srgb, var(--light) 60%, transparent); }
-  .text-theme-light\/70 { color: color-mix(in srgb, var(--light) 70%, transparent); }
-  .text-theme-light\/80 { color: color-mix(in srgb, var(--light) 80%, transparent); }
+  .text-theme-light\/60 { color: color-mix(in srgb, var(--theme-light-rgb) 60%, transparent); }
+  .text-theme-light\/70 { color: color-mix(in srgb, var(--theme-light-rgb) 70%, transparent); }
+  .text-theme-light\/80 { color: color-mix(in srgb, var(--theme-light-rgb) 80%, transparent); }
 
   /* Theme-based shadows */
   .shadow-theme-sm {

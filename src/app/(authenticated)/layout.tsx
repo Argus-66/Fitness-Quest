@@ -1,5 +1,8 @@
 'use client';
 
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { isAuthenticated } from '@/lib/auth';
 import Sidebar from '@/components/layout/Sidebar';
 import BottomNav from '@/components/layout/BottomNav';
 
@@ -8,6 +11,19 @@ export default function AuthenticatedLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push('/login');
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
   return (
     <div className="flex h-screen bg-solo-dark overflow-hidden">
       <Sidebar className="hidden md:flex fixed left-0 top-0 h-screen" />

@@ -1,25 +1,139 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { themes } from '@/config/themes';
 import { getUser } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 
-interface ThemeContextType {
-  currentTheme: string;
-  setTheme: (theme: string) => Promise<void>;
-  isLoading: boolean;
+// Define theme types
+interface ThemeColors {
+  dark: string;
+  accent: string;
+  primary: string;
+  secondary: string;
+  light: string;
+  highlight: string;
 }
 
-const ThemeContext = createContext<ThemeContextType>({
-  currentTheme: themes[0].id,
-  setTheme: async () => {},
-  isLoading: true,
-});
+interface Theme {
+  id: string;
+  name: string;
+  colors: ThemeColors;
+}
 
-export const useTheme = () => useContext(ThemeContext);
+// Available themes
+const themes: Theme[] = [
+  {
+    id: 'solo-leveling',
+    name: 'Solo Leveling',
+    colors: {
+      dark: '#120011',
+      accent: '#854F6C',
+      primary: '#522B5B',
+      secondary: '#382039',
+      light: '#F6F6F6',
+      highlight: '#E6BCCD'
+    }
+  },
+  {
+    id: 'naruto',
+    name: 'Naruto',
+    colors: {
+      dark: '#0B0C10',
+      accent: '#FF4136',
+      primary: '#2980B9',
+      secondary: '#FF851B',
+      light: '#FFDC00',
+      highlight: '#FDFEFE'
+    }
+  },
+  {
+    id: 'dragon-ball',
+    name: 'Dragon Ball',
+    colors: {
+      dark: '#0A0A23',
+      accent: '#FF8C00',
+      primary: '#E63946',
+      secondary: '#FFC300',
+      light: '#F1FAEE',
+      highlight: '#457B9D'
+    }
+  }
+];
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+// Context type
+interface ThemeContextType {
+  theme: Theme;
+  setTheme: (themeId: string) => void;
+  themes: Theme[];
+}
+
+// Create context
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+// Provider component
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(themes[0]);
+  
+  // Initialize theme from localStorage or default
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') || 'solo-leveling';
+      const foundTheme = themes.find(t => t.id === savedTheme) || themes[0];
+      setThemeState(foundTheme);
+    }
+  }, []);
+  
+  // Apply theme to CSS variables
+  useEffect(() => {
+    if (theme) {
+      const root = document.documentElement;
+      
+      // Convert hex to rgb
+      const hexToRgb = (hex: string) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result 
+          ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+          : null;
+      };
+      
+      // Set CSS variables from theme
+      root.style.setProperty('--theme-dark-rgb', hexToRgb(theme.colors.dark));
+      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.colors.accent));
+      root.style.setProperty('--theme-primary-rgb', hexToRgb(theme.colors.primary));
+      root.style.setProperty('--theme-secondary-rgb', hexToRgb(theme.colors.secondary));
+      root.style.setProperty('--theme-light-rgb', hexToRgb(theme.colors.light));
+      root.style.setProperty('--theme-highlight-rgb', hexToRgb(theme.colors.highlight));
+    }
+  }, [theme]);
+  
+  // Set theme function
+  const setTheme = (themeId: string) => {
+    const newTheme = themes.find(t => t.id === themeId) || themes[0];
+    setThemeState(newTheme);
+    
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', themeId);
+    }
+  };
+  
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, themes }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// Hook for using the theme context
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}
+
+export function ThemeProviderOld({ children }: { children: React.ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState(themes[0].id);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
