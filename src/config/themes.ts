@@ -1,14 +1,18 @@
+// Theme definitions for the application
+
+export interface ThemeColors {
+  dark: string;
+  accent: string;
+  primary: string;
+  secondary: string;
+  light: string;
+  highlight: string;
+}
+
 export interface Theme {
   id: string;
   name: string;
-  colors: {
-    dark: string;
-    accent: string;
-    primary: string;
-    secondary: string;
-    light: string;
-    highlight: string;
-  };
+  colors: ThemeColors;
 }
 
 export const themes: Theme[] = [
@@ -16,53 +20,17 @@ export const themes: Theme[] = [
     id: 'solo-leveling',
     name: 'Solo Leveling',
     colors: {
-      dark: '#0d0a12',
-      accent: '#9333ea',
-      primary: '#7e22ce',
-      secondary: '#6b21a8',
-      light: '#f5f3ff',
-      highlight: '#a855f7'
+      dark: '#120011',
+      accent: '#854F6C',
+      primary: '#522B5B',
+      secondary: '#382039',
+      light: '#F6F6F6',
+      highlight: '#E6BCCD'
     }
   },
   {
-    id: 'dragon-ball',
-    name: 'Dragon Ball',
-    colors: {
-      dark: '#1A1A1A',
-      accent: '#F9D342',
-      primary: '#FF4500',
-      secondary: '#EFEFEF',
-      light: '#FFFFFF',
-      highlight: '#DC143C'
-    }
-  },
-  {
-    id: 'one-punch',
-    name: 'One Punch',
-    colors: {
-      dark: '#0A0A23',
-      accent: '#FF8C00',
-      primary: '#E63946',
-      secondary: '#FFC300',
-      light: '#F1FAEE',
-      highlight: '#457B9D'
-    }
-  },
-  {
-    id: 'baki',
-    name: 'Baki',
-    colors: {
-      dark: '#0F0F0F',
-      accent: '#8B0000',
-      primary: '#B22222',
-      secondary: '#696969',
-      light: '#E0E0E0',
-      highlight: '#A52A2A'
-    }
-  },
-  {
-    id: 'attack-on-titan',
-    name: 'Attack on Titan',
+    id: 'naruto',
+    name: 'Naruto',
     colors: {
       dark: '#0B0C10',
       accent: '#FF4136',
@@ -73,51 +41,77 @@ export const themes: Theme[] = [
     }
   },
   {
-    id: 'one-piece',
-    name: 'One Piece',
+    id: 'dragon-ball',
+    name: 'Dragon Ball',
     colors: {
-      dark: '#001F3F',
-      accent: '#27AE60',
-      primary: '#E67E22',
-      secondary: '#F39C12',
-      light: '#FDFEFE',
-      highlight: '#FFFFFF'
-    }
-  },
-  {
-    id: 'jujutsu-kaisen',
-    name: 'Jujutsu Kaisen',
-    colors: {
-      dark: '#0D1117',
-      accent: '#0366D6',
-      primary: '#58A6FF',
-      secondary: '#161B22',
-      light: '#F0F6FC',
-      highlight: '#1F6FEB'
+      dark: '#0A0A23',
+      accent: '#FF8C00',
+      primary: '#E63946',
+      secondary: '#FFC300',
+      light: '#F1FAEE',
+      highlight: '#457B9D'
     }
   },
   {
     id: 'black-clover',
     name: 'Black Clover',
     colors: {
-      dark: '#121212',
-      accent: '#FFC107',
-      primary: '#673AB7',
-      secondary: '#4CAF50',
-      light: '#F5F5F5',
-      highlight: '#E91E63'
+      dark: '#1E1E1E',
+      accent: '#FFD700',
+      primary: '#4B0082',
+      secondary: '#32CD32',
+      light: '#F0F8FF',
+      highlight: '#FF4500'
     }
   },
   {
-    id: 'naruto',
-    name: 'Naruto',
+    id: 'jujutsu-kaisen',
+    name: 'Jujutsu Kaisen',
     colors: {
-      dark: '#094283',
-      accent: '#690000',
-      primary: '#2980B9',
-      secondary: '#000000',
-      light: '#F0F0F0',
-      highlight: '#E74C3C'
+      dark: '#1C1C1C',
+      accent: '#0077B6',
+      primary: '#9B59B6',
+      secondary: '#D2B4DE',
+      light: '#ECF0F1',
+      highlight: '#FFFFFF'
+    }
+  },
+  {
+    id: 'attack-on-titan',
+    name: 'Attack on Titan',
+    colors: {
+      dark: '#1A1A1A',
+      accent: '#8B0000',
+      primary: '#2F4F4F',
+      secondary: '#CD853F',
+      light: '#E8E8E8',
+      highlight: '#FFD700'
+    }
+  },
+  {
+    id: 'baki',
+    name: 'Baki',
+    colors: {
+      dark: '#101010',
+      accent: '#D32F2F',
+      primary: '#FF7043',
+      secondary: '#FFCCBC',
+      light: '#E0E0E0',
+      highlight: '#FFFFFF'
+    }
+  },
+  {
+    id: 'one-punch',
+    name: 'One Punch Man',
+    colors: {
+      dark: '#1A1A1A',
+      accent: '#F9D342',
+      primary: '#FF4500',
+      secondary: '#EFEFEF',
+      light: '#FFFFFF',
+      highlight: '#DC143C'
     }
   }
-]; 
+];
+
+export default themes; 

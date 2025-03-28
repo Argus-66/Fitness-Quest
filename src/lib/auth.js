@@ -1,16 +1,17 @@
 // Basic auth functions
 export const getUser = () => {
-  if (typeof window !== 'undefined') {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      try {
-        return JSON.parse(userStr);
-      } catch (e) {
-        return null;
+  try {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        return JSON.parse(storedUser);
       }
     }
+    return null;
+  } catch (error) {
+    console.error('Error getting current user:', error);
+    return null;
   }
-  return null;
 };
 
 export const clearUser = () => {

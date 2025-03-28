@@ -1,280 +1,167 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { getUser } from '@/lib/auth';
-import type { User } from '@/types/user';
-import { motion } from 'framer-motion';
-import { FaFire, FaChartLine, FaCrown, FaDumbbell, FaScroll, FaDragon, FaQuoteLeft } from 'react-icons/fa';
-import DailyWorkoutTracker from '@/components/dashboard/DailyWorkoutTracker';
-
-// Temporary quotes array - will be replaced with AI integration
-const quotes = [
-  "Every rep brings you closer to your legendary status.",
-  "Your body can stand almost anything. It's your mind you have to convince.",
-  "The only bad workout is the one that didn't happen."
-];
-
-// Particle configuration
-const PARTICLE_COUNT = 50;
-const PARTICLE_COLORS = [
-  'bg-theme-accent/30',
-  'bg-theme-primary/30',
-  'bg-theme-light/20',
-  'bg-theme-secondary/20',
-];
-
-const PARTICLE_SIZES = ['w-1 h-1', 'w-2 h-2', 'w-3 h-3'];
+import React, { useEffect, useState } from 'react';
+import { getCurrentUser } from '@/lib/auth';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [quote, setQuote] = useState('');
-  const [workouts, setWorkouts] = useState<Array<{
-    date: string;
-    name: string;
-    duration: number;
-    xpGained: number;
-  }>>([]);
-
-  // Fetch workouts function
-  const fetchWorkouts = useCallback(async () => {
-    if (!user?.username) return;
-    
-    try {
-      const response = await fetch(`/api/users/${user.username}/workouts`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch workouts');
-      }
-      const data = await response.json();
-      setWorkouts(data.workouts || []);
-    } catch (error) {
-      console.error('Failed to fetch workouts:', error);
-      setWorkouts([]);
-    }
-  }, [user?.username]);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const userData = getUser();
-    if (!userData) {
-      router.push('/login');
-      return;
-    }
-    setUser(userData);
-    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
-  }, [router]);
-
-  useEffect(() => {
-    if (user?.username) {
-      fetchWorkouts();
-    }
-  }, [user?.username, fetchWorkouts]);
-
-  const generateRandomPath = () => {
-    const startX = Math.random() * window.innerWidth;
-    const endX = startX + (Math.random() * 400 - 200); // Random drift left or right
-    return [startX, endX];
-  };
-
-  // Handle completed workout
-  const handleWorkoutComplete = async (date: string, workoutName: string, duration: number) => {
-    if (!user?.username) return;
-
-    try {
-      const xpGained = Math.floor(duration * 1.5); // Simple XP calculation based on duration
-      const response = await fetch(`/api/users/${user.username}/workouts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          date,
-          name: workoutName,
-          duration,
-          xpGained,
-        }),
-      });
-
-      if (response.ok) {
-        // Refresh workouts data
-        fetchWorkouts();
-        // Refresh user data to get updated stats
-        const userResponse = await fetch(`/api/users/${user.username}`);
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          setUser(userData);
-        }
+    const fetchUser = async () => {
+      try {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error recording workout:', error);
-    }
-  };
+    };
 
-  if (!user) return null;
+    fetchUser();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-12 bg-theme-primary/20 rounded w-1/4"></div>
+          <div className="h-64 bg-theme-primary/10 rounded"></div>
+          <div className="h-32 bg-theme-primary/10 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="p-6">
+        <div className="bg-theme-dark/50 text-theme-light rounded-lg p-6 shadow-theme">
+          <h2 className="text-xl font-bold mb-4">Welcome to Fitness Quest</h2>
+          <p>Please log in to view your dashboard.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-theme-gradient p-8 relative overflow-hidden">
-      {/* Enhanced Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(PARTICLE_COUNT)].map((_, i) => {
-          const size = PARTICLE_SIZES[Math.floor(Math.random() * PARTICLE_SIZES.length)];
-          const color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
-          const duration = Math.random() * 10 + 10;
-          const delay = Math.random() * -20;
-          const [startX, endX] = generateRandomPath();
-          
-          return (
-            <motion.div
-              key={i}
-              className={`absolute ${size} ${color} rounded-full shadow-theme-sm backdrop-blur-sm`}
-              animate={{
-                y: [-20, window.innerHeight + 20],
-                x: [startX, endX],
-                opacity: [0, 0.8, 0],
-                scale: [1, Math.random() * 1.5 + 0.5, 1],
-                rotate: [0, Math.random() * 360]
-              }}
-              transition={{
-                duration: duration,
-                repeat: Infinity,
-                ease: "linear",
-                delay: delay,
-                times: [0, 0.8, 1]
-              }}
-              style={{
-                filter: 'blur(1px)'
-              }}
-            />
-          );
-        })}
-      </div>
-
-      {/* Additional ambient glow effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-theme-primary/10 rounded-full filter blur-[100px] animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-theme-accent/10 rounded-full filter blur-[100px] animate-pulse" />
-
-      <motion.h1 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-4xl font-bold text-theme-gradient mb-8"
-      >
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-theme-light mb-6">
         Welcome back, {user.username}!
-      </motion.h1>
+      </h1>
 
-      {/* Top Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {[
-          { title: 'Current Streak', value: `${user.progression.streak} days`, icon: FaFire, color: 'from-theme-accent' },
-          { title: 'Total XP', value: user.progression.xp, icon: FaChartLine, color: 'from-theme-primary' },
-          { title: 'Level', value: user.progression.level, icon: FaCrown, color: 'from-theme-secondary' },
-          { title: 'Workouts', value: user.stats?.workoutsCompleted || 0, icon: FaDumbbell, color: 'from-theme-highlight' }
-        ].map((stat, index) => (
-          <motion.div
-            key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-theme-dark/30 backdrop-blur-lg rounded-xl border border-theme-accent/20 p-4
-              shadow-theme hover:shadow-theme-lg transition-all duration-300"
-          >
-            <div className="flex items-center space-x-4">
-              <div className={`p-3 rounded-lg bg-gradient-to-br ${stat.color} to-transparent/20`}>
-                <stat.icon className="w-6 h-6 text-theme-light" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="bg-theme-dark/50 rounded-lg p-6 shadow-theme border border-theme-primary/20">
+          <h2 className="text-lg font-bold text-theme-light mb-4">Your Stats</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-theme-primary/20 p-4 rounded-lg">
+              <p className="text-theme-light/70 text-sm">Level</p>
+              <p className="text-2xl font-bold text-theme-light">
+                {user.progression?.level || 1}
+              </p>
+            </div>
+            <div className="bg-theme-primary/20 p-4 rounded-lg">
+              <p className="text-theme-light/70 text-sm">XP</p>
+              <p className="text-2xl font-bold text-theme-light">
+                {user.progression?.xp || 0}
+              </p>
+            </div>
+            <div className="bg-theme-primary/20 p-4 rounded-lg">
+              <p className="text-theme-light/70 text-sm">Streak</p>
+              <p className="text-2xl font-bold text-theme-light">
+                {user.progression?.streak || 0} days
+              </p>
+            </div>
+            <div className="bg-theme-primary/20 p-4 rounded-lg">
+              <p className="text-theme-light/70 text-sm">Workouts</p>
+              <p className="text-2xl font-bold text-theme-light">
+                {user.stats?.workoutsCompleted || 0}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-theme-dark/50 rounded-lg p-6 shadow-theme border border-theme-primary/20">
+          <h2 className="text-lg font-bold text-theme-light mb-4">Daily Goals</h2>
+          <div className="space-y-4">
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-theme-light bg-theme-primary/30">
+                    Strength
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-semibold inline-block text-theme-light">
+                    30%
+                  </span>
+                </div>
               </div>
-              <div>
-                <p className="text-theme-light/70 text-sm">{stat.title}</p>
-                <p className="text-2xl font-bold text-theme-light">{stat.value}</p>
+              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-theme-primary/10">
+                <div
+                  style={{ width: '30%' }}
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-theme-accent"
+                ></div>
               </div>
             </div>
-          </motion.div>
-        ))}
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-theme-light bg-theme-primary/30">
+                    Cardio
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-semibold inline-block text-theme-light">
+                    60%
+                  </span>
+                </div>
+              </div>
+              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-theme-primary/10">
+                <div
+                  style={{ width: '60%' }}
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-theme-accent"
+                ></div>
+              </div>
+            </div>
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-theme-light bg-theme-primary/30">
+                    Flexibility
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-semibold inline-block text-theme-light">
+                    45%
+                  </span>
+                </div>
+              </div>
+              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-theme-primary/10">
+                <div
+                  style={{ width: '45%' }}
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-theme-accent"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Daily Workout Tracker */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="mb-8"
-      >
-        <DailyWorkoutTracker 
-          username={user.username} 
-          userId={user._id} 
-          onWorkoutComplete={handleWorkoutComplete}
-          onProgressUpdate={fetchWorkouts}
-        />
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Progress Card */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-theme-dark/30 backdrop-blur-lg p-6 rounded-xl border border-theme-accent/20 
-            shadow-theme hover:shadow-theme-lg transition-all duration-300"
-        >
-          <h2 className="text-2xl font-semibold text-theme-light mb-6 flex items-center">
-            <FaChartLine className="mr-2" /> Your Progress
-          </h2>
-          <div className="space-y-4">
-            {Object.entries(user.progression).map(([key, value]) => (
-              <div key={key} className="flex justify-between items-center">
-                <span className="text-theme-light/80 capitalize">{key}</span>
-                <span className="text-theme-light font-bold">{value}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Daily/Weekly Quests */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-theme-dark/30 backdrop-blur-lg p-6 rounded-xl border border-theme-accent/20"
-        >
-          <h2 className="text-2xl font-semibold text-theme-light mb-6 flex items-center">
-            <FaScroll className="mr-2" /> Daily Quests
-          </h2>
-          <div className="space-y-4">
-            <div className="p-3 bg-theme-primary/10 rounded-lg border border-theme-primary/20">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-theme-light">Complete 50 push-ups</span>
-                <span className="text-theme-accent">0/50</span>
-              </div>
-              <div className="h-1 bg-theme-primary/20 rounded-full overflow-hidden">
-                <div className="h-full w-0 bg-theme-accent rounded-full" />
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Current Event & Quote */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-6"
-        >
-          {/* Current Event */}
-          <div className="bg-theme-dark/30 backdrop-blur-lg p-6 rounded-xl border border-theme-accent/20">
-            <h2 className="text-2xl font-semibold text-theme-light mb-4 flex items-center">
-              <FaDragon className="mr-2" /> Current Quest
-            </h2>
-            <div className="text-theme-light/80">
-              <p className="font-semibold text-theme-accent mb-2">Dungeon: The Iron Temple</p>
-              <p>Clear 3 workout sessions to defeat the boss</p>
-            </div>
-          </div>
-
-          {/* Quote of the Day */}
-          <div className="bg-theme-dark/30 backdrop-blur-lg p-6 rounded-xl border border-theme-accent/20">
-            <div className="flex items-start space-x-3">
-              <FaQuoteLeft className="text-theme-accent text-xl flex-shrink-0" />
-              <p className="text-theme-light/80 italic">{quote}</p>
-            </div>
-          </div>
-        </motion.div>
+      <div className="bg-theme-dark/50 rounded-lg p-6 shadow-theme border border-theme-primary/20">
+        <h2 className="text-lg font-bold text-theme-light mb-4">Quick Start</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button className="p-4 bg-theme-accent/80 hover:bg-theme-accent text-white rounded-lg transition-colors">
+            Start Workout
+          </button>
+          <button className="p-4 bg-theme-primary/20 hover:bg-theme-primary/30 text-theme-light rounded-lg border border-theme-primary/30 transition-colors">
+            View Workouts
+          </button>
+          <button className="p-4 bg-theme-primary/20 hover:bg-theme-primary/30 text-theme-light rounded-lg border border-theme-primary/30 transition-colors">
+            View Progress
+          </button>
+        </div>
       </div>
     </div>
   );
