@@ -7,7 +7,7 @@ import {
   FaTrophy,
   FaUser,
 } from 'react-icons/fa';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth.js';
 
 const BottomNav = ({ className = '' }) => {
   const pathname = usePathname();

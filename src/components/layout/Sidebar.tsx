@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getUser } from '@/lib/auth';
+import { getUser } from '@/lib/auth.js';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaHome, FaTrophy, FaDumbbell, FaCalendarAlt, FaMedal, FaUser } from 'react-icons/fa';

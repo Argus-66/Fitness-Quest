@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth.js';
-import UserHeader from '@/components/profile/UserHeader.jsx';
-import ActivityHeatmap from '@/components/profile/ActivityHeatmap.jsx';
-import AddFriends from '@/components/profile/AddFriends.jsx';
+import UserHeader from '../../../components/profile/UserHeader';
+import ActivityHeatmap from '../../../components/profile/ActivityHeatmap';
+import AddFriends from '../../../components/profile/AddFriends';
 
 export default function ProfilePage() {
   const params = useParams();

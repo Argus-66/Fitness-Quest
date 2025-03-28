@@ -1,25 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable TypeScript type checking during build
+  experimental: {
+    esmExternals: 'loose',
+    serverComponentsExternalPackages: ['mongoose'],
+  },
   typescript: {
+    // Set this to false during deployment to avoid TypeScript errors stopping the build
     ignoreBuildErrors: true,
   },
-  // Disable ESLint during build
   eslint: {
+    // Set this to false during deployment to avoid ESLint errors stopping the build
     ignoreDuringBuilds: true,
   },
-  // Output standalone to make deployment more reliable
-  output: 'standalone',
-  // Skip all dependency checking
-  experimental: {
-    turbotrace: {
-      // Skip all tracing of dependencies
-      logLevel: 'error',
-    },
-  },
-  // Enable webpack analyzer only in production for debugging
-  webpack: (config, { isServer }) => {
-    // Explicitly include JSX/TSX files
+  webpack: (config) => {
+    // Configure file resolution
     config.resolve.extensions = ['.js', '.jsx', '.ts', '.tsx', ...config.resolve.extensions];
     return config;
   },

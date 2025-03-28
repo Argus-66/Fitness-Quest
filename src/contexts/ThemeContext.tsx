@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { themes } from '@/config/themes';
-import { getUser } from '@/lib/auth';
+import { getUser } from '@/lib/auth.js';
 import { usePathname } from 'next/navigation';
 
 // Define theme types

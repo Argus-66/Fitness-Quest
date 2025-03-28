@@ -9,7 +9,7 @@ import {
   FaChartLine,
   FaCog,
 } from 'react-icons/fa';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth.js';
 
 const Sidebar = ({ className = '' }) => {
   const pathname = usePathname();
