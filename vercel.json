@@ -1,24 +1,5 @@
 {
   "buildCommand": "next build",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "outputDirectory": ".next",
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
-  "builds": [
-    {
-      "src": "next.config.js",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
-  "crons": []
+  "framework": "nextjs"
 } 

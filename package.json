@@ -31,8 +31,7 @@
     "tailwindcss": "^3.3.0",
     "typescript": "^5",
     "eslint": "^8",
-    "eslint-config-next": "14.0.4",
-    "babel-plugin-module-resolver": "^5.0.0"
+    "eslint-config-next": "14.0.4"
   },
   "resolutions": {
     "**/@babel/runtime": "latest"

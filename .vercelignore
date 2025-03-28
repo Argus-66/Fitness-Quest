@@ -1,2 +1,14 @@
+# Ignore irrelevant files for deployment
+README.md
+.git
+.github
+.babelrc
+
+# Ignore any duplicate pages
+pages/(auth)/login/page.jsx
+pages/(auth)/register/page.jsx
+pages/api/auth/login/route.js
+pages/api/auth/register/route.js
+
 .eslintrc.json
 .eslintrc.js 
